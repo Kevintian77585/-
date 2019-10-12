@@ -1,0 +1,147 @@
+//项目阶段
+public static String STAGE_PREPARATION = "1";  报备阶段
+public static String STAGE_ESTABLISHMENT = "2";立项阶段
+public static String STAGE_BIDDING = "3";      招投标环节
+public static String STAGE_BUILD = "4";        项目建设环节
+public static String STAGE_TEST = "5";         项目测试上线环节
+public static String STAGE_ACCEPTANCE = "6";   项目验收环节
+public static String STAGE_COMPLETE = "7";     项目结项环节
+//项目流程
+public static String FLOW_PREPARATION = "1";      项目报备审批流程
+public static String FLOW_PROPOSAL = "2";         项目建议书审批流程
+public static String FLOW_FEASIBILITY = "3";      项目可行性审批流程
+public static String FLOW_CONCEPTS = "4";         项目初步设计及项目概算审批流程
+public static String FLOW_REQUIREMENT = "5";      项目需求方案审批流程
+public static String FLOW_BIDDING = "6";          项目招投标审批流程
+public static String FLOW_CONTRACT = "7";         项目合同审批流程
+public static String FLOW_LAUNCH = "8";           项目启动审批流程
+public static String FLOW_SPECIFICATION = "9";    项目需求规格说明书审批流程
+public static String FLOW_DESIGN = "10";          项目初步设计审批流程
+public static String FLOW_DETAILED = "11";        项目详细设计审批流程
+public static String FLOW_TEST = "12";            项目测试上线审批流程
+public static String FLOW_ACCEPTANCE = "13";      项目初验审批流程
+public static String FLOW_COMPLETE = "14";        项目终验审批流程
+public static String FLOW_AUDIT = "15";           项目审计审批流程
+public static String FLOW_PUT_ON_RECORD = "16";   项目结项备案审批流程
+public static String FLOW_FINISHED = "17";        项目完成正常结束
+
+//项目子流程
+public static String SUBFLOW_APPLY = "1";          经办人提交
+public static String SUBFLOW_HEAD = "2";           经办人领导审批
+public static String SUBFLOW_APPLY_SUBMIT = "3";   经办人报批
+public static String SUBFLOW_DISTRIBUTOR = "4";    项目分发
+public static String SUBFLOW_ADMIN_1 = "5";        初审
+public static String SUBFLOW_LEADER = "6";	   领导审批
+public static String SUBFLOW_ADMIN_2 = "7";        二审
+public static String SUBFLOW_CLOSE = "8";          流程结束
+public static String SUBFLOW_NEXT = "9";           下一个流程
+
+//角色权限
+role_apply        建设单位申请人员  770cbb3794dc4298929e7faa351b4284
+role_apply_head   建设单位审批人员  d571733f3bcc4bd3bf40e3487777bfbc
+role_distributor  项目分发人员      7a6ce221f1704271b44f133ac8c6d309
+role_admin        项目管理人员      785de6d82b9c4d2c9698707e9f15edff
+role_leader       委领导            fc156568a3c74d00b98cf1b8ea1b33ca
+
+
+--项目管理系统数据统计SQL
+select --t.project_id,
+ t.project_name AS 项目名称,
+ t.apply_person AS 申请人姓名,
+ t.apply_dept AS 申请人部门,
+ CASE
+   WHEN T.Fund_Source = '1' THEN
+    '预算'
+   WHEN T.Fund_Source = '2' THEN
+    '应急'
+   WHEN T.Fund_Source = '3' THEN
+    '政府投资'
+ END AS 资金来源,
+ t.fund_amount "预算金额(万元)",
+ 
+ CASE
+   WHEN T.CURRENT_SUBFLOW = '1' THEN
+    '经办人提交'
+   WHEN T.CURRENT_SUBFLOW = '2' THEN
+    '经办人领导审批'
+   WHEN T.CURRENT_SUBFLOW = '3' THEN
+    '经办人报批'
+   WHEN T.CURRENT_SUBFLOW = '4' THEN
+    '项目分发'
+   WHEN T.CURRENT_SUBFLOW = '5' THEN
+    '初审'
+   WHEN T.CURRENT_SUBFLOW = '6' THEN
+    '领导审批'
+   WHEN T.CURRENT_SUBFLOW = '7' THEN
+    '二审'
+   WHEN T.CURRENT_SUBFLOW = '8' THEN
+    '流程结束'
+   WHEN T.CURRENT_SUBFLOW = '9' THEN
+    '下一个流程'
+ END AS 子流程,
+ 
+ CASE
+   WHEN t.fund_source = '1' THEN
+    '委预算项目'
+   WHEN t.fund_source = '2' THEN
+    '委应急项目'
+   WHEN t.fund_source = '3' THEN
+    '政府投资'
+ END AS 资金类型,
+ to_char(t.apply_time, 'YYYY-MM-DD  hh24:mi:ss ') 申请时间,
+ CASE
+   WHEN t.current_flow = '1' THEN
+    '项目报备申请流程'
+   WHEN t.current_flow = '2' THEN
+    '项目建议书审批流程'
+   WHEN t.current_flow = '3' THEN
+    '项目可行性审批流程'
+   WHEN t.current_flow = '4' THEN
+    '项目初步设计方案及概预算审批流程'
+   WHEN t.current_flow = '5' THEN
+    '项目需求方案审批流程'
+   WHEN t.current_flow = '6' THEN
+    '项目招投标审批流程'
+   WHEN t.current_flow = '7' THEN
+    '项目合同备案审批流程'
+   WHEN t.current_flow = '8' THEN
+    '项目启动审批流程'
+   WHEN t.current_flow = '9' THEN
+    '项目需求规格说明书审批流程'
+   WHEN t.current_flow = '10' THEN
+    '项目初步设计审批流程'
+   WHEN t.current_flow = '11' THEN
+    '项目详细设计审批流程'
+   WHEN t.current_flow = '12' THEN
+    '项目测试上线审批流程'
+   WHEN t.current_flow = '13' THEN
+    '项目初验审批流程'
+   WHEN t.current_flow = '14' THEN
+    '项目终验审批流程'
+   WHEN t.current_flow = '15' THEN
+    '项目审计审批流程'
+   WHEN t.current_flow = '16' THEN
+    '项目结项备案审批流程'
+   WHEN t.current_flow = '17' THEN
+    '项目完成正常结束'
+ END AS 项目流程阶段,
+ CASE
+   WHEN t.current_stage = '1' THEN
+    '项目报备'
+   WHEN t.current_stage = '2' THEN
+    '项目立项'
+   WHEN t.current_stage = '3' THEN
+    '项目招投标'
+   WHEN t.current_stage = '4' THEN
+    '项目建设'
+   WHEN t.current_stage = '5' THEN
+    '测试上线'
+   WHEN t.current_stage = '6' THEN
+    '项目验收'
+   WHEN t.current_stage = '7' THEN
+    '项目结项'
+ END AS 项目阶段,
+ t.description AS 项目描述
+  from project t
+ where t.apply_person <> '关晓东';
+

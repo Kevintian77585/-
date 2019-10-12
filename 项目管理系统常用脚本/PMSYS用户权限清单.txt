@@ -1,0 +1,25 @@
+select u.login_name,
+       u.name,
+       CASE
+         WHEN R.ID = '770cbb3794dc4298929e7faa351b4284' THEN
+          '建设单位申请人员'
+         WHEN R.ID = 'd571733f3bcc4bd3bf40e3487777bfbc' THEN
+          '建设单位审批人员'
+         WHEN R.ID = '7a6ce221f1704271b44f133ac8c6d309' THEN
+          '项目分发人员'
+         WHEN R.ID = '785de6d82b9c4d2c9698707e9f15edff' THEN
+          '项目管理人员'
+         WHEN R.ID = 'fc156568a3c74d00b98cf1b8ea1b33ca' THEN
+          '委领导'
+       end as id,
+       u.area_code
+
+  from dc_dc.dc_sys_user u, dc_dc.dc_sys_role r, dc_dc.dc_sys_user_role ur
+ where u.id = ur.user_id
+   and r.id = ur.role_id
+   and r.id in ('770cbb3794dc4298929e7faa351b4284',
+                'd571733f3bcc4bd3bf40e3487777bfbc',
+                '7a6ce221f1704271b44f133ac8c6d309',
+                '785de6d82b9c4d2c9698707e9f15edff',
+                'fc156568a3c74d00b98cf1b8ea1b33ca')
+ group by u.login_name, u.name, r.id, u.area_code;

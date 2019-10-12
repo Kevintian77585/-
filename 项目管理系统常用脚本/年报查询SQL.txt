@@ -1,0 +1,37 @@
+select *
+   from gcloud_annual.nb_qy_jbxx_main j
+  where j.ancheyear = '2017'
+    and j.firstpubtime > to_date('2019-01-01', 'yyyy-mm-dd')
+    and j.ifpub = '2'
+    and exists(
+    (select m.pripid
+           from gcloud_annual.nb_qy_jbxx_main m
+           where m.pripid = j.pripid and m.ancheyear='2016' and  m.anchedate > to_date('2017-09-01', 'yyyy-mm-dd')))
+    and exists
+  (select m.pripid
+           from gcloud_annual.nb_qy_jbxx_main m
+          where m.pripid = j.pripid
+            and m.firstpubtime > to_date('2019-01-01', 'yyyy-mm-dd')
+            and m.ancheyear != '2018'           
+          group by m.pripid
+         having(count(m.pripid) > 1))
+    and not exists
+  (select 1
+           from lcuser.view_annual_penalty@lcuser v
+          where (v.Litigantcerno = j.regno or v.Litigantcerno = j.uniscid));
+
+--测试服务器
+10.3.70.52:8888/xmglxt/testLogin?userAccount=ZHANFENG@SZAIC
+
+10.3.70.52/xmglxt/
+--正式服务器
+10.0.4.200:8888/xmglxt/testLogin?userAccount=ZHANFENG@SZAIC
+
+10.0.4.200/xmglxt/
+--药品进口备案（SQLServer）
+guanxd
+guanxd?123
+10.255.2.61
+--项目管理系统账号密码
+project
+
